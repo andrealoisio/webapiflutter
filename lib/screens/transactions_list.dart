@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:persistenciaflutter/components/centered_messages.dart';
-import 'package:persistenciaflutter/components/progress.dart';
-import 'package:persistenciaflutter/http/webclients/transaction_webclient.dart';
-import 'package:persistenciaflutter/model/transaction.dart';
+import 'package:webapiflutter/components/centered_messages.dart';
+import 'package:webapiflutter/components/progress.dart';
+import 'package:webapiflutter/http/webclients/transaction_webclient.dart';
+import 'package:webapiflutter/model/transaction.dart';
 
 class TransactionsList extends StatelessWidget {
   final TransactionWebClient _webClient = TransactionWebClient();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:persistenciaflutter/http/webclients/transaction_webclient.dart';
-import 'package:persistenciaflutter/model/contact.dart';
-import 'package:persistenciaflutter/model/transaction.dart';
+import 'package:webapiflutter/http/webclients/transaction_webclient.dart';
+import 'package:webapiflutter/model/contact.dart';
+import 'package:webapiflutter/model/transaction.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;

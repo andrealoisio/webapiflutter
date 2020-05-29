@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:persistenciaflutter/screens/contacts_list.dart';
-import 'package:persistenciaflutter/screens/transactions_list.dart';
+import 'package:webapiflutter/screens/contacts_list.dart';
+import 'package:webapiflutter/screens/transactions_list.dart';
 
 class Dashboard extends StatelessWidget {
   @override
