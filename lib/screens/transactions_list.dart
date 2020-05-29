@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:persistenciaflutter/components/centered_messages.dart';
 import 'package:persistenciaflutter/components/progress.dart';
-import 'package:persistenciaflutter/http/webclient.dart';
+import 'package:persistenciaflutter/http/webclients/transaction_webclient.dart';
 import 'package:persistenciaflutter/model/transaction.dart';
 
 class TransactionsList extends StatelessWidget {
+  final TransactionWebClient _webClient = TransactionWebClient();
   @override
   Widget build(BuildContext context) {
     // transactions.add(Transaction(100.0, Contact(0, 'Alex', 1000)));
@@ -14,7 +15,7 @@ class TransactionsList extends StatelessWidget {
       ),
       body: FutureBuilder(
           future:
-              Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
+              Future.delayed(Duration(seconds: 1)).then((value) => _webClient.findAll()),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -35,7 +36,7 @@ class TransactionsList extends StatelessWidget {
                           child: ListTile(
                             leading: Icon(Icons.monetization_on),
                             title: Text(
-                              transaction.value.toString(),
+                              transaction.contact.name + ' => ' + transaction.value.toString(),
                               style: TextStyle(
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold,

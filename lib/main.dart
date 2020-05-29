@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:persistenciaflutter/http/webclient.dart';
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(BytebankApp());
-  findAll().then((value) {
-    print('novastransacoes: $value');
-  });
 }
 
 class BytebankApp extends StatelessWidget {
