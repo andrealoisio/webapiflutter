@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistenciaflutter/components/progress.dart';
 import 'package:persistenciaflutter/database/dao/contact_dao.dart';
 import 'package:persistenciaflutter/model/contact.dart';
 import 'package:persistenciaflutter/screens/contact_form.dart';
@@ -19,22 +20,14 @@ class _ContactsListState extends State<ContactsList> {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: Future.delayed(Duration(seconds: 1)).then((value) => _contactDao.findAll()),
+        future: Future.delayed(Duration(seconds: 1))
+            .then((value) => _contactDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading'),
-                  ],
-                ),
-              );
+              return Progress();
               break;
             case ConnectionState.active:
               break;
@@ -51,15 +44,14 @@ class _ContactsListState extends State<ContactsList> {
           }
           return Text('Unknown error');
         },
-        
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => ContactForm()))
               .then((value) {
-                setState(() {});
-              });
+            setState(() {});
+          });
         },
         child: Icon(Icons.add),
       ),
