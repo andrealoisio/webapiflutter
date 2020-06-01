@@ -29,7 +29,7 @@ class _TransactionsAuthDialogState extends State<TransactionsAuthDialog> {
         ),
         style: TextStyle(
           fontSize: 32,
-          letterSpacing: 32,
+          letterSpacing: 24,
         ),
       ),
       actions: <Widget>[
