@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webapiflutter/http/webclients/transaction_webclient.dart';
 import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/model/transaction.dart';
+import 'package:webapiflutter/screens/transactions_auth_dialog.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -58,15 +59,27 @@ class _TransactionFormState extends State<TransactionForm> {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: RaisedButton(
-                    child: Text('Transfer'), onPressed: () {
-                      final double value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transaction(value, widget.contact);
-                      _webClient.save(transactionCreated).then((transaction) {
-                        if (transaction != null) {
-                          Navigator.of(context).pop(transaction);
-                        }
-                      });
-                  },
+                    child: Text('Transfer'),
+                    onPressed: () {
+                      final double value =
+                          double.tryParse(_valueController.text);
+                      final transactionCreated =
+                          Transaction(value, widget.contact);
+                      showDialog(
+                          context: context,
+                          builder: (context) => TransactionsAuthDialog(
+                                onConfirm: (String password) {
+                                  debugPrint(password);
+                                  _webClient
+                                      .save(transactionCreated, password)
+                                      .then((transaction) {
+                                    if (transaction != null) {
+                                      Navigator.of(context).pop(transaction);
+                                    }
+                                  });
+                                },
+                              ));
+                    },
                   ),
                 ),
               )
