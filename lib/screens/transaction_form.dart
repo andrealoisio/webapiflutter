@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http_interceptor/models/http_interceptor_exception.dart';
+import 'package:uuid/uuid.dart';
 import 'package:webapiflutter/http/webclients/transaction_webclient.dart';
 import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/model/transaction.dart';
@@ -20,9 +20,11 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
+  final String transactionId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
+    print('Transaction form id $transactionId');
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -52,6 +54,7 @@ class _TransactionFormState extends State<TransactionForm> {
               Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: TextField(
+                  autofocus: true,
                   controller: _valueController,
                   style: TextStyle(fontSize: 24.0),
                   decoration: InputDecoration(labelText: 'Value'),
@@ -66,7 +69,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     child: Text('Transfer'),
                     onPressed: () {
                       final double value = double.tryParse(_valueController.text);
-                      final transactionCreated = Transaction(value, widget.contact);
+                      final transactionCreated = Transaction(transactionId, value, widget.contact);
                       showDialog(
                           context: context,
                           builder: (contextDialog) => TransactionsAuthDialog(
@@ -113,12 +116,18 @@ class _TransactionFormState extends State<TransactionForm> {
     await Future.delayed(Duration(seconds: 1));
     final Transaction transaction = await _webClient
         .save(transactionCreated, password)
-        .catchError((e) => _showFailureMessage(context, message: e.message), test: (e) => e is HttpException)
+        .catchError((e) {
+          _showFailureMessage(context, message: e.message);
+        }, test: (e) => e is HttpException)
         .catchError(
-          (e) => _showFailureMessage(context, message: 'Timeout'),
+          (e) {
+            _showFailureMessage(context, message: 'Timeout');
+          },
           test: (e) => e is TimeoutException,
         )
-        .catchError((e) => _showFailureMessage(context));
+        .catchError((e) {
+          _showFailureMessage(context);
+        });
     return transaction;
   }
 

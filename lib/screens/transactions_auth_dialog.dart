@@ -20,6 +20,7 @@ class _TransactionsAuthDialogState extends State<TransactionsAuthDialog> {
       title: Text('Authenticate'),
       content: TextField(
         controller: _passwordController,
+        autofocus: true,
         obscureText: true,
         maxLength: 4,
         textAlign: TextAlign.center,
