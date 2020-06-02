@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:webapiflutter/components/progress.dart';
 import 'package:webapiflutter/http/webclients/transaction_webclient.dart';
 import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/model/transaction.dart';
@@ -21,6 +22,7 @@ class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
   final String transactionId = Uuid().v4();
+  bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,15 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Visibility(
+                visible: _sending,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Progress(
+                    message: 'Sending...',
+                  ),
+                ),
+              ),
               Text(
                 widget.contact.name,
                 style: TextStyle(
@@ -113,20 +124,23 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   Future<Transaction> _send(Transaction transactionCreated, String password, BuildContext context) async {
+    setState(() {
+      _sending = true;
+    });
     await Future.delayed(Duration(seconds: 1));
-    final Transaction transaction = await _webClient
-        .save(transactionCreated, password)
-        .catchError((e) {
-          _showFailureMessage(context, message: e.message);
-        }, test: (e) => e is HttpException)
-        .catchError(
-          (e) {
-            _showFailureMessage(context, message: 'Timeout');
-          },
-          test: (e) => e is TimeoutException,
-        )
-        .catchError((e) {
-          _showFailureMessage(context);
+    final Transaction transaction = await _webClient.save(transactionCreated, password).catchError((e) {
+      _showFailureMessage(context, message: e.message);
+    }, test: (e) => e is HttpException).catchError(
+      (e) {
+        _showFailureMessage(context, message: 'Timeout');
+      },
+      test: (e) => e is TimeoutException,
+    ).catchError((e) {
+      _showFailureMessage(context);
+    }).whenComplete(() => {
+          setState(() {
+            _sending = false;
+          })
         });
     return transaction;
   }
