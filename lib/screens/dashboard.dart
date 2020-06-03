@@ -9,55 +9,59 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('images/bytebank_logo.png'),
-          ),
-          Container(
-            height: 120,
-            decoration: myBoxDecoration(),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _FeatureItem(
-                      'Transfer',
-                      Icons.monetization_on,
-                      onClick: () => _showContactList(context),
-                    ),
-                    _FeatureItem(
-                      'Transaction feed',
-                      Icons.description,
-                      onClick: () => _showTransactionsList(context),
-                    ),
-                    _FeatureItem(
-                      'Teste vazio',
-                      Icons.desktop_mac,
-                      onClick: () => null,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset('images/bytebank_logo.png'),
+                ),
+                Container(
+                  height: 120,
+                  decoration: myBoxDecoration(),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          FeatureItem(
+                            'Transfer',
+                            Icons.monetization_on,
+                            onClick: () => _showContactList(context),
+                          ),
+                          FeatureItem(
+                            'Transaction feed',
+                            Icons.description,
+                            onClick: () => _showTransactionsList(context),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _FeatureItem extends StatelessWidget {
+class FeatureItem extends StatelessWidget {
   final String name;
   final IconData icon;
   final Function onClick;
 
-  const _FeatureItem(this.name, this.icon, {@required this.onClick}) : assert(icon != null), assert(onClick != null);
+  const FeatureItem(this.name, this.icon, {@required this.onClick})
+      : assert(icon != null),
+        assert(onClick != null);
 
   @override
   Widget build(BuildContext context) {
