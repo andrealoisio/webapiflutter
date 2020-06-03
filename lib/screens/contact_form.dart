@@ -3,6 +3,11 @@ import 'package:webapiflutter/database/dao/contact_dao.dart';
 import 'package:webapiflutter/model/contact.dart';
 
 class ContactForm extends StatefulWidget {
+
+  final ContactDao contactDao;
+
+  ContactForm(this.contactDao);
+
   @override
   _ContactFormState createState() => _ContactFormState();
 }
@@ -10,7 +15,6 @@ class ContactForm extends StatefulWidget {
 class _ContactFormState extends State<ContactForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _accountNumberController = TextEditingController();
-  final ContactDao _contactDao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +57,7 @@ class _ContactFormState extends State<ContactForm> {
                       final String name = _nameController.text;
                       final int accountNumber = int.tryParse(_accountNumberController.text);
                       final newContact = Contact(0, name, accountNumber);
-                      _contactDao.save(newContact).then((id) {
-                        Navigator.pop(context);
-                      });
+                      save(newContact, context);
                     },
                     child: Text('Create'),
                   ),
@@ -66,5 +68,10 @@ class _ContactFormState extends State<ContactForm> {
         ),
       ),
     );
+  }
+
+  void save(Contact newContact, BuildContext context) async {
+    await widget.contactDao.save(newContact);
+    Navigator.pop(context);
   }
 }
