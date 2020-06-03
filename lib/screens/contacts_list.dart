@@ -6,12 +6,15 @@ import 'package:webapiflutter/screens/contact_form.dart';
 import 'package:webapiflutter/screens/transaction_form.dart';
 
 class ContactsList extends StatefulWidget {
+  final ContactDao contactDao;
+
+  ContactsList(this.contactDao);
+
   @override
   _ContactsListState createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
-  final ContactDao _contactDao = ContactDao();
   @override
   Widget build(BuildContext context) {
     // contacts.add(Contact(0, 'André', 1234));
@@ -22,7 +25,7 @@ class _ContactsListState extends State<ContactsList> {
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
         future: Future.delayed(Duration(seconds: 1))
-            .then((value) => _contactDao.findAll()),
+            .then((value) => widget.contactDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
