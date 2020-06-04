@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:webapiflutter/main.dart';
+import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/screens/contact_form.dart';
 import 'package:webapiflutter/screens/contacts_list.dart';
 import 'package:webapiflutter/screens/dashboard.dart';
-import 'matchers.dart';
-import 'mocks.dart';
+import '../mocks.dart';
+import 'actions.dart';
 
 void main() {
   testWidgets('Should save a contact', (tester) async {
@@ -13,35 +15,34 @@ void main() {
     await tester.pumpWidget(BytebankApp(contactDao: mockContactDao));
     final dashboard = find.byType(Dashboard);
     expect(dashboard, findsOneWidget);
-    final transferFeatureItem = findFeatureWithPredicate('Transfer', Icons.monetization_on);
+
+    await clickOnTransferFeatureItem(tester);
+    /* final transferFeatureItem = findFeatureWithPredicate('Transfer', Icons.monetization_on);
     expect(transferFeatureItem, findsOneWidget);
-    await tester.tap(transferFeatureItem);
+    await tester.tap(transferFeatureItem); */
+
     await tester.pumpAndSettle();
     final contactsList = find.byType(ContactsList);
     expect(contactsList, findsOneWidget);
-    
+
+    verify(mockContactDao.findAll()).called(1);
+
     final fabNewContact = find.widgetWithIcon(FloatingActionButton, Icons.add);
     expect(fabNewContact, findsOneWidget);
     await tester.tap(fabNewContact);
     await tester.pumpAndSettle();
-    
+
     final contactForm = find.byType(ContactForm);
     expect(contactForm, findsOneWidget);
 
     final nameTextField = find.byWidgetPredicate((widget) {
-      if (widget is TextField) {
-        return widget.decoration.labelText == 'Full name';
-      }
-      return false;
+      return _textFieldMatcher(widget, 'Full name');
     });
     expect(nameTextField, findsOneWidget);
     await tester.enterText(nameTextField, 'André');
 
     final accountNumberTextField = find.byWidgetPredicate((widget) {
-      if (widget is TextField) {
-        return widget.decoration.labelText == 'Account number';
-      }
-      return false;
+      return _textFieldMatcher(widget, 'Account number');
     });
     expect(accountNumberTextField, findsOneWidget);
     await tester.enterText(accountNumberTextField, '1000');
@@ -51,8 +52,18 @@ void main() {
     await tester.tap(createButton);
     await tester.pumpAndSettle();
 
+    verify(mockContactDao.save(Contact(0, 'André', 1000)));
+
     final contactsListBack = find.byType(ContactsList);
     expect(contactsListBack, findsOneWidget);
-    
+
+    verify(mockContactDao.findAll());
   });
+}
+
+bool _textFieldMatcher(Widget widget, String labelText) {
+  if (widget is TextField) {
+    return widget.decoration.labelText == labelText;
+  }
+  return false;
 }

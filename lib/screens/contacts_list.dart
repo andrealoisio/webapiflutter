@@ -5,11 +5,16 @@ import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/screens/contact_form.dart';
 import 'package:webapiflutter/screens/transaction_form.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
   final ContactDao contactDao;
 
   ContactsList(this.contactDao);
 
+  @override
+  _ContactsListState createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
     // contacts.add(Contact(0, 'André', 1234));
@@ -20,7 +25,7 @@ class ContactsList extends StatelessWidget {
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
         future: Future.delayed(Duration(seconds: 1))
-            .then((value) => contactDao.findAll()),
+            .then((value) => widget.contactDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -54,9 +59,9 @@ class ContactsList extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ContactForm(contactDao)))
+              .push(MaterialPageRoute(builder: (context) => ContactForm(widget.contactDao)))
               .then((value) {
-            // setState(() {});
+            setState(() {});
           });
         },
         child: Icon(Icons.add),
