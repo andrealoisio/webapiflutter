@@ -40,7 +40,7 @@ class _ContactsListState extends State<ContactsList> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return _ContactItem(
+                  return ContactItem(
                     contact,
                     onClick: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -70,11 +70,11 @@ class _ContactsListState extends State<ContactsList> {
   }
 }
 
-class _ContactItem extends StatelessWidget {
-  final Contact _contact;
+class ContactItem extends StatelessWidget {
+  final Contact contact;
   final Function onClick;
 
-  const _ContactItem(this._contact, {@required this.onClick});
+  const ContactItem(this.contact, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +82,11 @@ class _ContactItem extends StatelessWidget {
       child: ListTile(
         onTap: onClick,
         title: Text(
-          _contact.name,
+          contact.name,
           style: TextStyle(fontSize: 24.0),
         ),
         subtitle: Text(
-          _contact.accountNumber.toString(),
+          contact.accountNumber.toString(),
           style: TextStyle(fontSize: 16.0),
         ),
       ),
