@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:webapiflutter/database/dao/contact_dao.dart';
 import 'package:webapiflutter/model/contact.dart';
+import 'package:webapiflutter/widgets/app_dependencies.dart';
 
 class ContactForm extends StatefulWidget {
-
-  final ContactDao contactDao;
-
-  ContactForm(this.contactDao);
-
   @override
   _ContactFormState createState() => _ContactFormState();
 }
@@ -18,6 +14,7 @@ class _ContactFormState extends State<ContactForm> {
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('New contact'),
@@ -57,7 +54,7 @@ class _ContactFormState extends State<ContactForm> {
                       final String name = _nameController.text;
                       final int accountNumber = int.tryParse(_accountNumberController.text);
                       final newContact = Contact(0, name, accountNumber);
-                      save(newContact, context);
+                      save(dependencies.contactDao, newContact, context);
                     },
                     child: Text('Create'),
                   ),
@@ -70,8 +67,8 @@ class _ContactFormState extends State<ContactForm> {
     );
   }
 
-  void save(Contact newContact, BuildContext context) async {
-    await widget.contactDao.save(newContact);
+  void save(ContactDao contactDao, Contact newContact, BuildContext context) async {
+    await contactDao.save(newContact);
     Navigator.pop(context);
   }
 }

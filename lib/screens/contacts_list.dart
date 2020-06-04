@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:webapiflutter/components/progress.dart';
-import 'package:webapiflutter/database/dao/contact_dao.dart';
 import 'package:webapiflutter/model/contact.dart';
 import 'package:webapiflutter/screens/contact_form.dart';
 import 'package:webapiflutter/screens/transaction_form.dart';
+import 'package:webapiflutter/widgets/app_dependencies.dart';
 
 class ContactsList extends StatefulWidget {
-  final ContactDao contactDao;
-
-  ContactsList(this.contactDao);
-
   @override
   _ContactsListState createState() => _ContactsListState();
 }
@@ -17,6 +13,7 @@ class ContactsList extends StatefulWidget {
 class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     // contacts.add(Contact(0, 'André', 1234));
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +22,7 @@ class _ContactsListState extends State<ContactsList> {
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
         future: Future.delayed(Duration(seconds: 1))
-            .then((value) => widget.contactDao.findAll()),
+            .then((value) => dependencies.contactDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -59,7 +56,7 @@ class _ContactsListState extends State<ContactsList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ContactForm(widget.contactDao)))
+              .push(MaterialPageRoute(builder: (context) => ContactForm()))
               .then((value) {
             setState(() {});
           });

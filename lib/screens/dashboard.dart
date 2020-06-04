@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:webapiflutter/database/dao/contact_dao.dart';
 import 'package:webapiflutter/screens/contacts_list.dart';
 import 'package:webapiflutter/screens/transactions_list.dart';
 
 class Dashboard extends StatelessWidget {
-
-  final ContactDao contactDao;
-
-  const Dashboard({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +34,7 @@ class Dashboard extends StatelessWidget {
                           FeatureItem(
                             'Transfer',
                             Icons.monetization_on,
-                            onClick: () => _showContactList(context, contactDao),
+                            onClick: () => _showContactList(context),
                           ),
                           FeatureItem(
                             'Transaction feed',
@@ -108,9 +103,9 @@ class FeatureItem extends StatelessWidget {
   }
 }
 
-void _showContactList(BuildContext context, ContactDao contactDao) {
+void _showContactList(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-    return ContactsList(contactDao);
+    return ContactsList();
   }));
 }
 
